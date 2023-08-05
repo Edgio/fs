@@ -38,6 +38,10 @@ export class RelativeFolderName implements FSName {
     private fullPathLazy: Lazy<string>;
     get fullPath() { return this.fullPathLazy.value; }
 
+    static from(source: string): RelativeFolderName {
+        return new RelativeFolderName(source);
+    }
+
     static parse = (name: string): [RelativeFolderName | undefined, Name] => {
         if (name.startsWith("/"))
             throw new Error("RelativeFolderName cannot start with slash, did you mean AbsoluteFolderName?")

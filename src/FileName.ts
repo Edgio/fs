@@ -27,6 +27,10 @@ export class FileName implements FSName {
     readonly name: Name;
     readonly extension: FileExtension;
 
+    static from(source: string): FileName {
+        return new FileName(source);
+    }
+
     static parse = (name: string): [Name, FileExtension] => {
         if (name.indexOf("/") > -1)
             throw new Error("FileName cannot contain slash")

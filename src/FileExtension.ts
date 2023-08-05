@@ -30,6 +30,10 @@ export class FileExtension implements FSName {
         return this.value === "";
     }
 
+    static from(source: string): FileExtension {
+        return new FileExtension(source);
+    }
+
     static parse = (name: string): string => {
         if (name.indexOf("/") > -1)
             throw new Error("FileExtension cannot contain slash");

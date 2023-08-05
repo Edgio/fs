@@ -11,6 +11,10 @@ export class Name implements FSName {
 
     readonly value: string = "";
 
+    static from(source: string): Name {
+        return new Name(source);
+    }
+
     static parse = (name: string): string => {
         const slashIndex = name.indexOf("/")
     

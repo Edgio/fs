@@ -29,6 +29,10 @@ export class RelativeFileName implements FSName {
     readonly name: FileName;
     readonly parent?: RelativeFolderName
 
+    static from(source: string): RelativeFileName {
+        return new RelativeFileName(source);
+    }
+
     static parse = (name: string): [RelativeFolderName | undefined, FileName] => {
         if (name.startsWith("/"))
             throw new Error("RelativeFileName cannot start with slash, did you mean AbsoluteFileName?")

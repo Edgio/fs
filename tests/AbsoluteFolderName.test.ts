@@ -2,7 +2,7 @@ import { describe, expect, it } from "@jest/globals";
 import { AbsoluteFolderName } from "../src/AbsoluteFolderName";
 import { fs } from "./utils/fs";
 
-const sandbox = fs.sandbox.absoluteFolderTests;
+const sandbox = fs.sandbox.absoluteFolderNameTests;
 
 describe('Absolute Folder Name unit test"', () => {
     describe("parse", () => {

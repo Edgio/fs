@@ -2,6 +2,8 @@ import { AbsoluteFileName } from "./AbsoluteFileName";
 import { FSName } from "./FSName";
 import { FileName } from "./FileName";
 import { Name } from "./Name";
+import { Serializer } from "./serializer/Serializer";
+import { SerializerType } from "./serializer/SerializerType";
 import { normalizePath } from "./utils/normalizePath";
 import fs from "fs";
 
@@ -29,11 +31,11 @@ export class AbsoluteFolderName implements FSName {
     readonly name: Name;
     readonly parent: AbsoluteFolderName | undefined;
 
-    file(fileName: FileName | string) : AbsoluteFileName {
+    file<TContent = string>(fileName: FileName | string, type?: SerializerType | Serializer<TContent>) : AbsoluteFileName<TContent> {
         if (typeof fileName === "string")
-            return new AbsoluteFileName(new FileName(fileName), this);
+            return new AbsoluteFileName<TContent>(new FileName(fileName), this, type);
         else
-            return new AbsoluteFileName(fileName, this);
+            return new AbsoluteFileName<TContent>(fileName, this, type);
     }
 
     folder(folderName: Name | string): AbsoluteFolderName {
@@ -84,6 +86,10 @@ export class AbsoluteFolderName implements FSName {
 
         if (!ignoreIfNotExists)
             throw new Error(`Folder ${this.value} doesn't exist`);
+    }
+
+    static from(source: string): AbsoluteFolderName {
+        return new AbsoluteFolderName(source);
     }
 
     static parse = (name: string): [Name, AbsoluteFolderName | undefined] => {

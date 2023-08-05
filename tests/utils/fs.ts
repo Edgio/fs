@@ -5,15 +5,18 @@ import { AbsoluteFolderName } from "../../src/AbsoluteFolderName";
 export const fs = new AbsoluteFolderName(__dirname).parent!.parent!
     .with(fs => ({
     sandbox: fs.folder("sandbox").with(sandbox => ({
-        absoluteFolderTests: sandbox.folder("absoluteFolderTests").with(absoluteFolderTests => ({
-            createFileTest: absoluteFolderTests.file("createFileTest.txt"),
+        absoluteFolderNameTests: sandbox.folder("absoluteFolderNameTests").with(absoluteFolderTests => ({
             createFolderTest: absoluteFolderTests.folder("createFolderTest"),
-            createFolderTestCopy: absoluteFolderTests.folder("createFolderTestCopy"),
+            tempFolder: absoluteFolderTests.folder("temp"),
         })),
-        absoluteFileTests: sandbox.folder("absoluteFileTests").with(absoluteFolderTests => ({
+        absoluteFileNameHelperTests: sandbox.folder("absoluteFileNameHelperTests").with(absoluteFolderTests => ({
             createFileTest: absoluteFolderTests.file("createFileTest.txt"),
-            createFolderTest: absoluteFolderTests.folder("createFolderTest"),
-            createFolderTestCopy: absoluteFolderTests.folder("createFolderTestCopy"),
+            tempFolder: absoluteFolderTests.folder("temp"),
+        })),
+        absoluteFileNameContentTests: sandbox.folder("absoluteFileNameContentTests").with(absoluteFolderTests => ({
+            file: absoluteFolderTests.file("file.txt"),
+            tempFolder: absoluteFolderTests.folder("temp"),
+            fileWithJsonContent: absoluteFolderTests.file<{ name: string, value: number }>("fileWithJsonContent.json", "json"),
         })),
     }))
 }));
