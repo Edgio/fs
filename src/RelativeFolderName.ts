@@ -1,3 +1,4 @@
+import { isAbsolutePath } from "./Envirovment";
 import { FSName } from "./FSName";
 import { Name } from "./Name";
 import { Lazy } from "./utils/Lazy";
@@ -43,7 +44,7 @@ export class RelativeFolderName implements FSName {
     }
 
     static parse = (name: string): [RelativeFolderName | undefined, Name] => {
-        if (name.startsWith("/"))
+        if (isAbsolutePath(name))
             throw new Error("RelativeFolderName cannot start with slash, did you mean AbsoluteFolderName?")
         
         const normalized = normalizePath(name);

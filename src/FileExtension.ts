@@ -38,8 +38,8 @@ export class FileExtension implements FSName {
         if (name.indexOf("/") > -1)
             throw new Error("FileExtension cannot contain slash");
 
-        if (name.indexOf(".") == -1)
-            throw new Error("FileExtension must contain dot");
+        if (!name.startsWith("."))
+            throw new Error("FileExtension must start with dot");
 
         return name;
     }

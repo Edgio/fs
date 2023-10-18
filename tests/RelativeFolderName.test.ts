@@ -20,7 +20,4 @@ describe('RelativeFolderName unit test', () => {
     it ("should fail if relative folder name contains slash at the begining", () => {
         expect(() => new RelativeFolderName("/folder")).toThrowError();
     });
-
-
-    
 });

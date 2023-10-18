@@ -2,6 +2,7 @@ import { FSName } from "./FSName";
 import { RelativeFolderName } from "./RelativeFolderName";
 import { FileName } from "./FileName";
 import { normalizePath } from "./utils/normalizePath";
+import { isAbsolutePath } from "./Envirovment";
 
 /**
  * Relative file name is a file name that can contain parent folder that
@@ -34,7 +35,7 @@ export class RelativeFileName implements FSName {
     }
 
     static parse = (name: string): [RelativeFolderName | undefined, FileName] => {
-        if (name.startsWith("/"))
+        if (isAbsolutePath(name))
             throw new Error("RelativeFileName cannot start with slash, did you mean AbsoluteFileName?")
 
         if (name.endsWith("/"))
