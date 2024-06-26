@@ -1,6 +1,6 @@
 {
   "name": "ts-fs-utils",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "scripts": {
     "test": "jest",
     "build": "rm -rf ./dist; tsc; cp package.json ./dist; cp README.md ./dist",
