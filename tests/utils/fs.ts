@@ -9,6 +9,10 @@ export const fs = new AbsoluteFolderName(__dirname).parent!.parent!
             createFolderTest: absoluteFolderTests.folder("createFolderTest"),
             tempFolder: absoluteFolderTests.folder("temp"),
         })),
+        absoluteFolderNameTestsWin: sandbox.folder("absoluteFolderNameTests").with(absoluteFolderTests => ({
+            createFolderTest: absoluteFolderTests.folder("createFolderTest"),
+            tempFolder: absoluteFolderTests.folder("temp"),
+        })),
         absoluteFileNameHelperTests: sandbox.folder("absoluteFileNameHelperTests").with(absoluteFolderTests => ({
             createFileTest: absoluteFolderTests.file("createFileTest.txt"),
             tempFolder: absoluteFolderTests.folder("temp"),
