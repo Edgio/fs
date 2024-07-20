@@ -18,7 +18,7 @@ describe('Absolute File Name parsing tests"', () => {
         expect(file.value).toBe("/file.txt");
         expect(file.name.value).toBe("file.txt");
         expect(file.name.extension.value).toBe(".txt");
-        expect(file.parent).toBeUndefined();
+        expect(file.parent?.parent).toBeUndefined();
     });
 
     it("should fail when absolute file name ends with slash", () => {

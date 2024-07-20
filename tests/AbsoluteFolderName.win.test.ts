@@ -19,7 +19,8 @@ describe("Absolute Folder Name unit test for windows", () => {
             const folder = new AbsoluteFolderName("c:/folder");
             expect(folder.value).toBe("c:/folder");
             expect(folder.name.value).toBe("folder");
-            expect(folder.parent).toBe(undefined);
+            expect(folder.parent?.value).toBe("c:");
+            expect(folder.parent!.parent).toBe(undefined);
         });
 
         it("should parse absolute folder name with parent", () => {
@@ -40,7 +41,7 @@ describe("Absolute Folder Name unit test for windows", () => {
             const folder = new AbsoluteFolderName("c:/folder///");
             expect(folder.value).toBe("c:/folder");
             expect(folder.name.value).toBe("folder");
-            expect(folder.parent).toBe(undefined);
+            expect(folder.parent?.parent).toBe(undefined);
         });
 
         it("should not fail when it contains more than one consecutive slash", () => {

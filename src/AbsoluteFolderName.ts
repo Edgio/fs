@@ -1,5 +1,5 @@
 import { AbsoluteFileName } from "./AbsoluteFileName";
-import { isAbsolutePath, isRelativePath, context } from "./Envirovment";
+import { isRelativePath, context } from "./Envirovment";
 import { FSName } from "./FSName";
 import { FileName } from "./FileName";
 import { Name } from "./Name";
@@ -15,7 +15,7 @@ import fs from "fs";
  * must be absolute folder name or undefined (if folder is at the root)
  */
 export class AbsoluteFolderName implements FSName {
-    constructor(name: Name | string, parent?: AbsoluteFolderName, driveOrSlash?: string) {
+    constructor(name: Name | string, parent?: AbsoluteFolderName) {
         if (typeof name === "string") {
             const parsed = AbsoluteFolderName.parse(name);
             this.parent = parsed[1];
@@ -25,16 +25,13 @@ export class AbsoluteFolderName implements FSName {
             this.name = name;
         }   
 
-        this.driveOrSlash = driveOrSlash ?? this.getDriveOrSlash(name, parent!);
-        
         this.value = this.parent ?
             `${this.parent.value}/${this.name.value}` :
-            `${this.driveOrSlash}${this.name.value}`;
+            `${this.name.value}`;
     }
 
     readonly value: string;
     readonly name: Name;
-    readonly driveOrSlash: string;
     readonly parent: AbsoluteFolderName | undefined;
 
     file<TContent = string>(fileName: FileName | string, type?: SerializerType | Serializer<TContent>) : AbsoluteFileName<TContent> {
@@ -52,23 +49,10 @@ export class AbsoluteFolderName implements FSName {
     }
 
     with<T extends {}>(children: (name: AbsoluteFolderName) => T): AbsoluteFolderName & T {
-        const newDefinition = new AbsoluteFolderName(this.name, this.parent, this.driveOrSlash) as AbsoluteFolderName & T;
+        const newDefinition = new AbsoluteFolderName(this.name, this.parent) as AbsoluteFolderName & T;
         const res = children(newDefinition);
         newDefinition.setChildren(res);
         return newDefinition;
-    }
-
-    private getDriveOrSlash(name: Name | string, parent: AbsoluteFolderName): string {
-        if (context.isWindows) {
-            if (typeof name === "string") {
-                const driveLetter = name.substring(0, 1);
-                return `${driveLetter}:/`;
-            } else {
-                return parent.driveOrSlash
-            }
-        } else {
-            return "/";
-        }
     }
 
     private setChildren<T extends {}>(children: T) {
@@ -113,27 +97,19 @@ export class AbsoluteFolderName implements FSName {
 
     static parse = (name: string): [Name, AbsoluteFolderName | undefined] => {
         if (isRelativePath(name))
-            throw new Error("AbsoulteFolderName must start with slash, did you mean RelativeFolderName?")
+            throw new Error(`AbsoulteFolderName must start with ${context.isWindows ? "drive name" : "slash"}, did you mean RelativeFolderName?`)
 
         const normalized = normalizePath(name);
         const lastSlashIndex = normalized.lastIndexOf("/")
-        
-        // on windows we need to skip drive letter and colon
-        // on linux we need don't need to skip anything as it
-        // starts with slash
-        const firstSlashIndex = context.isWindows ? 2 : 0;
-
-        if (lastSlashIndex > firstSlashIndex) {
-            const parent = new AbsoluteFolderName(normalized.substring(0, lastSlashIndex))
-            const folder = new Name(normalized.substring(lastSlashIndex + 1))
-            return [folder, parent]
-        } else {
-            const parent = undefined;
-            const startToSkip = context.isWindows ? 3 : 1;
-
-            // skip slash or drive letter
-            const folder = new Name(normalized.substring(startToSkip))
-            return [folder, parent]
+   
+        if (lastSlashIndex === -1) {
+            return [new Name(normalized), undefined];
         }
+
+        const rest = normalized.substring(0, lastSlashIndex)
+        const parent = new AbsoluteFolderName(rest.length === 0 ? "/" : rest);
+        const folder = new Name(normalized.substring(lastSlashIndex + 1))
+        return [folder, parent];
+        
     }
 }

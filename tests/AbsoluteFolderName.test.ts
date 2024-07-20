@@ -10,7 +10,7 @@ describe('Absolute Folder Name unit test"', () => {
             const folder = new AbsoluteFolderName("/folder");
             expect(folder.value).toBe("/folder");
             expect(folder.name.value).toBe("folder");
-            expect(folder.parent).toBe(undefined);
+            expect(folder.parent?.parent).toBe(undefined);
         });
 
         it("should parse absolute folder name with parent", () => {
@@ -31,7 +31,7 @@ describe('Absolute Folder Name unit test"', () => {
             const folder = new AbsoluteFolderName("/folder///");
             expect(folder.value).toBe("/folder");
             expect(folder.name.value).toBe("folder");
-            expect(folder.parent).toBe(undefined);
+            expect(folder.parent?.parent).toBe(undefined);
         });
 
         it("should not fail when it contains more than one consecutive slash", () => {

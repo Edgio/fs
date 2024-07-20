@@ -5,8 +5,8 @@ import { FSName } from "./FSName";
  * withouth folder path, so there is only limitation that name cannot contain slash.
  */
 export class Name implements FSName {
-    constructor(name: string) {
-        this.value = Name.parse(name);
+    constructor(name: string, root = false) {
+        this.value = Name.parse(name, root);
     }
 
     readonly value: string = "";
@@ -15,13 +15,16 @@ export class Name implements FSName {
         return new Name(source);
     }
 
-    static parse = (name: string): string => {
-        const slashIndex = name.indexOf("/")
+    static parse = (name: string, root = false): string => {
+        if (root)
+            return name;
+        
+        const slashIndex = name.indexOf("/");
     
         if (slashIndex > -1)
-            throw new Error("Name cannot contain slash")
+            throw new Error("Name cannot contain slash");
     
-        return name
+        return name;
     }
 }
 

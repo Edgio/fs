@@ -6,7 +6,9 @@ import { Serializer } from "./serializer/Serializer";
 import { SerializerType } from "./serializer/SerializerType";
 import { createJsonSerializer } from "./serializer/createJsonSerializer";
 import { createRawSerializer } from "./serializer/createRawSerializer";
-
+import { context } from "./Envirovment";
+import { normalizePath } from "./utils/normalizePath";
+import { Name } from "./Name";
 /**
  * Absolute file name is a file name that starts with slash and can contain parent folder that
  * must be absolute folder name or undefined (if file is at the root)
@@ -109,17 +111,11 @@ export class AbsoluteFileName<TContent = string> implements FSName {
         if (name.endsWith("/"))
             throw new Error("AbsoluteFileName cannot end with slash, did you mean AbsoluteFolderName?")
 
-        const lastSlashIndex = name.lastIndexOf("/")
-        
-        if (lastSlashIndex > 0) {
-            const parent = new AbsoluteFolderName(name.substring(0, lastSlashIndex))
-            const fileName = new FileName(name.substring(lastSlashIndex + 1))
-            return [parent, fileName]
-        } else {
-            const parent = undefined
-            // remove leading slash as this is absoulute path at root
-            const fileName = new FileName(name.substring(1))
-            return [parent, fileName]
-        }
+        const normalized = normalizePath(name);
+        const lastSlashIndex = normalized.lastIndexOf("/")
+        const rest = normalized.substring(0, lastSlashIndex)
+        const parent = new AbsoluteFolderName(rest.length === 0 ? "/" : rest);
+        const fileName = new FileName(normalized.substring(lastSlashIndex + 1));
+        return [parent, fileName];
     }
 }

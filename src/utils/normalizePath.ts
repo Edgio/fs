@@ -3,10 +3,12 @@
  */
 export const normalizePath = (value: string) => {
     const normalized = value
-        // remove all consecutive slashes
+        // replace windows backslashes with slashes
+        .replace(/\\/g, "/")
+        // then remove all consecutive slashes
         .replace(/\/+/g, "/")
         // then remove slash at the end
-        .replace(/\/+$/, '');
+        .replace(/\/+$/, '')
 
     return normalized;
 }
